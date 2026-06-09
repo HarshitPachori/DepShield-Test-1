@@ -15,7 +15,7 @@
     "express": "^4.16.2",
     "express-soap": "^1.0.3",
     "express-xml-bodyparser": "^0.3.0",
-    "gmail-send": "^1.2.14",
+    "nodemailer": "*",
     "mongodb": "^3.0.7",
     "mysql": "^2.15.0",
     "node-mailer": "^0.1.1",
