@@ -1,25 +1,27 @@
 const request = require('request');
-const uuid = require('node-uuid');
-const moment = require('moment');
+const express = require('express');
 
-// User API
-const getUser = (userId, callback) => {
+const router = express.Router();
+
+const fetchExternal = (url, callback) => {
+  request({ url, json: true }, (err, res, body) => {
+    if (err) return callback(err);
+    callback(null, body);
+  });
+};
+
+const fetchUser = (userId, callback) => {
   request(`https://api.example.com/users/${userId}`, (err, res, body) => {
     if (err) return callback(err);
     callback(null, JSON.parse(body));
   });
 };
 
-const createSession = () => {
-  return uuid.v4();
-};
+router.get('/users/:id', (req, res) => {
+  fetchUser(req.params.id, (err, user) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(user);
+  });
+});
 
-const formatDate = (date) => {
-  return moment(date).format('MMMM Do YYYY, h:mm:ss a');
-};
-
-const isExpired = (date) => {
-  return moment().isAfter(moment(date).add(7, 'days'));
-};
-
-module.exports = { getUser, createSession, formatDate, isExpired };
+module.exports = router;
