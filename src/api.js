@@ -1,20 +1,27 @@
-const request = require('request');
+const axios = require('axios');
 const express = require('express');
 
 const router = express.Router();
 
 const fetchExternal = (url, callback) => {
-  request({ url, json: true }, (err, res, body) => {
-    if (err) return callback(err);
-    callback(null, body);
-  });
+  axios.get(url)
+    .then(response => {
+      callback(null, response.data);
+    })
+    .catch(error => {
+      callback(error);
+    });
 };
 
 const fetchUser = (userId, callback) => {
-  request(`https://api.example.com/users/${userId}`, (err, res, body) => {
-    if (err) return callback(err);
-    callback(null, JSON.parse(body));
-  });
+  axios.get(`https://api.example.com/users/${userId}`)
+    .then(response => {
+      // axios automatically parses JSON responses if the Content-Type header is application/json
+      callback(null, response.data);
+    })
+    .catch(error => {
+      callback(error);
+    });
 };
 
 router.get('/users/:id', (req, res) => {
